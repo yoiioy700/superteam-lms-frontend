@@ -231,7 +231,7 @@ export default function CourseDetail() {
 
         {/* Lessons */}
         <div className="px-6 lg:px-12 py-12">
-          <div className="max-w-6xl xl:max-w-7xl mx-auto"
+          <div className="max-w-6xl xl:max-w-7xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Course Content</h2>
             <div className="space-y-3">
               {course.lessons.map((lesson: any, index: number) => {
