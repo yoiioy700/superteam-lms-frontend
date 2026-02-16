@@ -142,7 +142,7 @@ export default function CourseDetail() {
         </header>
 
         {/* Course Hero */}
-        <div className="px-6 py-12 border-b border-slate-800">
+        <div className="px-6 py-8 lg:py-10 border-b border-slate-800">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm text-slate-400 mb-4">
               <Link href="/" className="hover:text-white transition-colors">Courses</Link>
@@ -230,7 +230,7 @@ export default function CourseDetail() {
         </div>
 
         {/* Lessons */}
-        <div className="px-6 lg:px-12 py-12">
+        <div className="px-6 lg:px-12 py-6 lg:py-8">
           <div className="max-w-6xl xl:max-w-7xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Course Content</h2>
             <div className="space-y-3">
@@ -299,6 +299,26 @@ export default function CourseDetail() {
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="border-t border-slate-800 px-6 lg:px-12 py-8 mt-8">
+          <div className="max-w-6xl xl:max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-emerald-400 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-slate-950" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <span className="font-semibold text-white">Superteam Academy</span>
+            </div>
+            <p className="text-sm text-slate-500">© 2026 Superteam Brazil. Built for Bounty #4.</p>
+            <div className="flex items-center gap-4">
+              <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm">GitHub</a>
+              <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm">Twitter</a>
+              <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm">Discord</a>
+            </div>
+          </div>
+        </footer>
       </div>
 
       {/* Quiz Modal */}
