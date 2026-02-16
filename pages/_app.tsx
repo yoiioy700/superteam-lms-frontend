@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 import '../styles/globals.css';
+import { Navbar } from '../components';
 
 export default function App({ Component, pageProps }: AppProps) {
   const network = WalletAdapterNetwork.Devnet;
@@ -24,7 +25,12 @@ export default function App({ Component, pageProps }: AppProps) {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <Component {...pageProps} />
+          <div className="min-h-screen bg-slate-900">
+            <Navbar />
+            <div className="pt-16">
+              <Component {...pageProps} />
+            </div>
+          </div>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
