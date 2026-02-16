@@ -118,7 +118,7 @@ export default function CourseDetail() {
 
       <div className="min-h-screen bg-slate-950">
         {/* Demo Banner */}
-        <div className="bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 border-b border-violet-500/30 px-6 py-2">
+        <div className="bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 border-b border-violet-500/30 px-6 py-3">
           <div className="max-w-6xl mx-auto text-center">
             <p className="text-sm text-violet-300">
               🔓 <span className="font-semibold">Demo Mode</span> — No wallet required. Try the quiz to test your knowledge!
@@ -127,7 +127,7 @@ export default function CourseDetail() {
         </div>
 
         {/* Header */}
-        <header className="px-6 border-b border-slate-800">
+        <header className="px-6 py-2 border-b border-slate-800"
           <div className="max-w-6xl mx-auto h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="w-9 h-9 bg-emerald-400 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
