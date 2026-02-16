@@ -140,10 +140,6 @@ export default function Home() {
                 ))
               )}
             </div>
-                  progress={course.publicKey === '2' ? 35 : 0}
-                />
-              ))}
-            </div>
           </div>
         </section>
 
