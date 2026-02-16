@@ -15,74 +15,137 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center px-6 overflow-hidden bg-[#0a0a0f]">
-      {/* Gradient orb following mouse */}
-      <div 
-        className="absolute w-[600px] h-[600px] rounded-full opacity-20 blur-3xl pointer-events-none transition-all duration-700 ease-out"
-        style={{
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%)',
-          left: mousePosition.x - 300,
-          top: mousePosition.y - 300,
-        }}
-      />
-
-      {/* Static gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 via-transparent to-transparent" />
-
-      <div className="relative max-w-4xl mx-auto text-center">
-        {/* Tagline */}
-        <p className="text-sm tracking-[0.2em] text-violet-400/80 mb-6">
-          SUPERTEAM ACADEMY
-        </p>
-
-        {/* Main Headline */}
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white mb-6 leading-[1.1] tracking-tight">
-          Learn to build
-          <span className="block font-medium text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
-            on Solana
-          </span>
-        </h1>
-
-        {/* Description */}
-        <p className="text-lg text-white/50 mb-10 max-w-lg mx-auto leading-relaxed font-light">
-          Complete courses, earn XP, and collect verifiable on-chain credentials 
-          crafted for the next generation of developers.
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="#courses"
-            className="group relative px-8 py-4 bg-white text-[#0a0a0f] font-medium rounded-full overflow-hidden transition-all hover:scale-105"
-          >
-            <span className="relative z-10">Explore Courses</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-400 to-fuchsia-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </a>
-          
-          {!connected && (
-            <WalletMultiButton className="!bg-transparent !text-white !border !border-white/20 !rounded-full !px-8 !py-4 hover:!bg-white/5 !transition-all" />
-          )}
-        </div>
-
-        {/* Stats */}
-        <div className="flex items-center justify-center gap-12 mt-16">
-          {[
-            { value: '12+', label: 'Courses' },
-            { value: '2.5K', label: 'Students' },
-            { value: '50K', label: 'XP Earned' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-2xl font-light text-white mb-1">{stat.value}</div>
-              <div className="text-xs text-white/30 tracking-wider">{stat.label}</div>
-            </div>
-          ))}
-        </div>
+    <section className="relative min-h-screen flex items-center px-6 overflow-hidden bg-[#0a0a0f]">
+      {/* Background elements */}
+      <div className="absolute inset-0">
+        {/* Gradient orbs */}
+        <div 
+          className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full opacity-20 blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
+            transform: `translate(${(mousePosition.x - window.innerWidth / 2) * 0.02}px, ${(mousePosition.y - window.innerHeight / 2) * 0.02}px)`,
+          }}
+        />
+        <div 
+          className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] rounded-full opacity-15 blur-3xl"
+          style={{
+            background: 'radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%)',
+            transform: `translate(${(mousePosition.x - window.innerWidth / 2) * -0.01}px, ${(mousePosition.y - window.innerHeight / 2) * -0.01}px)`,
+          }}
+        />
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center p-2">
-          <div className="w-1 h-2 bg-white/40 rounded-full animate-bounce" />
+      <div className="relative max-w-7xl mx-auto w-full">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left: Content */}
+          <div className="order-2 lg:order-1">
+            <p className="text-sm tracking-[0.3em] text-violet-400/80 mb-6 font-light">
+              SUPERTEAM ACADEMY
+            </p>
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light text-white mb-6 leading-[1.1] tracking-tight">
+              Master
+              <span className="block font-medium text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+                Solana
+              </span>
+              <span className="block">Development</span>
+            </h1>
+
+            <p className="text-lg text-white/40 mb-10 max-w-md leading-relaxed font-light">
+              Complete courses, earn XP, and collect verifiable on-chain credentials 
+              crafted for the next generation.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <a
+                href="#courses"
+                className="group relative px-8 py-4 bg-white text-[#0a0a0f] font-medium rounded-full overflow-hidden transition-all hover:scale-105"
+              >
+                <span className="relative z-10">Explore Courses</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-400 to-fuchsia-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
+              
+              {!connected && (
+                <WalletMultiButton className="!bg-transparent !text-white !border !border-white/20 !rounded-full !px-8 !py-4 hover:!bg-white/5 !transition-all" />
+              )}
+            </div>
+
+            {/* Stats - horizontal */}
+            <div className="flex items-center gap-10 mt-16 pt-8 border-t border-white/10">
+              {[
+                { value: '12+', label: 'Courses' },
+                { value: '2.5K', label: 'Students' },
+                { value: '50K', label: 'XP Earned' },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <div className="text-2xl font-light text-white mb-1">{stat.value}</div>
+                  <div className="text-xs text-white/30 tracking-wider">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Visual element */}
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div className="relative">
+              {/* Abstract 3D cube visualization */}
+              <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px]">
+                {/* Main cube */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-48 h-48 sm:w-64 sm:h-64 relative transform rotate-12"
+                    style={{
+                      transform: `rotateX(55deg) rotateZ(-45deg) rotateY(10deg)`,
+                      transformStyle: 'preserve-3d',
+                    }}
+                  >
+                    {/* Front face */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/30 backdrop-blur-sm"
+                      style={{ transform: 'translateZ(4rem)' }}
+                    />
+                    
+                    {/* Back face */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 border border-violet-500/20"
+                      style={{ transform: 'translateZ(-4rem) rotateY(180deg)' }}
+                    />
+                    
+                    {/* Top face */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-400/25 to-fuchsia-400/25 border border-violet-500/30"
+                      style={{ transform: 'rotateX(-90deg) translateZ(4rem)' }}
+                    />
+                    
+                    {/* Bottom face */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-fuchsia-500/5 border border-violet-500/20"
+                      style={{ transform: 'rotateX(90deg) translateZ(4rem)' }}
+                    />
+                    
+                    {/* Right face */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-violet-500/25"
+                      style={{ transform: 'rotateY(90deg) translateZ(4rem)' }}
+                    />
+                    
+                    {/* Left face */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-violet-500/25"
+                      style={{ transform: 'rotateY(-90deg) translateZ(4rem)' }}
+                    />
+
+                    {/* Inner glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 blur-xl" />
+                  </div>
+                </div>
+
+                {/* Floating elements */}
+                <div className="absolute top-10 -left-10 w-16 h-16 rounded-full bg-gradient-to-br from-violet-500/30 to-fuchsia-500/30 border border-violet-500/30 animate-pulse blur-sm" />
+                <div className="absolute bottom-20 right-0 w-12 h-12 rounded-full bg-violet-500/20 border border-violet-500/30 animate-pulse blur-sm" 
+                  style={{ animationDelay: '1s' }}
+                />
+              </div>
+
+              {/* Label */}
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-center">
+                <p className="text-xs text-white/30 tracking-wider">ON-CHAIN LEARNING</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
