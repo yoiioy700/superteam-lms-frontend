@@ -12,78 +12,74 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const opacity = Math.max(0.3, 1 - scrollY / 400);
-
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center px-6 pt-24 pb-16 overflow-hidden">
-      {/* Background - clean grid */}
-      <div 
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(20, 241, 149, 0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(20, 241, 149, 0.3) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
-          opacity: opacity * 0.03,
-        }}
-      />
+    <section className="relative min-h-screen flex flex-col justify-between px-6 pt-24 pb-8 overflow-hidden bg-black">
+      {/* Marquee top */}
+      <div className="absolute top-0 left-0 right-0 overflow-hidden border-b border-white/20 py-2 bg-black z-10">
+        <div className="animate-marquee whitespace-nowrap flex gap-8">
+          {[...Array(20)].map((_, i) => (
+            <span key={i} className="text-xs font-bold tracking-widest text-white/60 uppercase">
+              LEARN TO BUILD • EARN XP • MINT CREDENTIALS •
+            </span>
+          ))}
+        </div>
+      </div>
 
-      {/* Content */}
-      <div className="relative max-w-4xl mx-auto text-center">
-        {/* Tag */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#14F195]/10 border border-[#14F195]/20 mb-6">
-          <span className="w-1.5 h-1.5 bg-[#14F195] rounded-full animate-pulse" />
-          <span className="text-xs font-medium text-[#14F195] tracking-wide uppercase">
-            Superteam Academy
-          </span>
+      {/* Main content */}
+      <div className="relative max-w-5xl mx-auto flex-1 flex flex-col justify-center">
+        {/* Glitch text effect */}
+        <div className="mb-8">
+          <p className="text-sm font-bold tracking-[0.3em] text-white/40 uppercase mb-6">
+            // SUPERTEAM_ACADEMY v1.0
+          </p>
+          
+          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-4">
+            LEARN<br />
+            <span className="text-[#14F195]">SOLANA</span>
+          </h1>
+          
+          <p className="text-lg sm:text-xl text-white/50 max-w-md font-light tracking-wide">
+            Complete courses. Earn XP. Collect on-chain credentials.
+          </p>
         </div>
 
-        {/* Main Headline */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
-          Learn to build on
-          <span className="text-[#14F195]"> Solana</span>
-        </h1>
-
-        {/* Subheadline */}
-        <p className="text-lg sm:text-xl text-white/60 mb-8 max-w-2xl mx-auto leading-relaxed">
-          Complete courses, earn XP, and collect verifiable on-chain credentials. 
-          From fundamentals to advanced patterns.
-        </p>
-
-        {/* Stats */}
-        <div className="flex items-center justify-center gap-8 sm:gap-12 mb-10">
+        {/* Stats - brutalist blocks */}
+        <div className="flex flex-wrap gap-0 mb-10">
           {[
-            { value: '12+', label: 'Courses' },
-            { value: '2.5K+', label: 'Learners' },
-            { value: '50K+', label: 'XP Earned' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-white">{stat.value}</div>
-              <div className="text-xs text-white/40 uppercase tracking-wider">{stat.label}</div>
+            { value: '12', label: 'COURSES', suffix: '+' },
+            { value: '2.5K', label: 'LEARNERS', suffix: '' },
+            { value: '50K', label: 'XP_EARNED', suffix: '' },
+          ].map((stat, i) => (
+            <div key={stat.label} className="border border-white/20 px-6 py-4 -ml-[1px] first:ml-0 bg-black">
+              <div className="text-3xl font-black text-white">{stat.value}<span className="text-[#14F195]">{stat.suffix}</span></div>
+              <div className="text-[10px] font-bold tracking-widest text-white/40 mt-1">{stat.label}</div>
             </div>
           ))}
         </div>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        {/* CTA - brutalist */}
+        <div className="flex flex-col sm:flex-row gap-4">
           <a
             href="#courses"
-            className="px-8 py-3 bg-[#14F195] text-[#0a0e1a] font-semibold hover:bg-[#0ed184] transition-colors"
+            className="px-8 py-4 bg-[#14F195] text-black font-black text-sm tracking-widest hover:bg-white transition-colors border border-[#14F195] hover:border-white"
           >
-            Browse Courses
+            START_LEARNING →
           </a>
           
           {!connected && (
-            <WalletMultiButton className="!bg-transparent !text-white !border !border-white/20 !rounded-none !px-8 !py-3 hover:!bg-white/5" />
+            <WalletMultiButton className="!bg-black !text-white !border !border-white/20 !rounded-none !px-8 !py-4 !font-bold !text-sm !tracking-widest hover:!bg-white/5" />
           )}
         </div>
+      </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="w-6 h-10 border-2 border-white/20 flex items-start justify-center p-1.5">
-            <div className="w-1 h-2 bg-white/40 animate-bounce" />
-          </div>
+      {/* Bottom marquee */}
+      <div className="absolute bottom-0 left-0 right-0 overflow-hidden border-t border-white/20 py-2 bg-black">
+        <div className="animate-marquee-reverse whitespace-nowrap flex gap-8">
+          {[...Array(20)].map((_, i) => (
+            <span key={i} className="text-xs font-bold tracking-widest text-white/40 uppercase">
+              ANCHOR • TOKENS • DEFI • COMMUNITY • BUILD • SHIP •
+            </span>
+          ))}
         </div>
       </div>
     </section>

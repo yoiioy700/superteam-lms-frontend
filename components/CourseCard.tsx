@@ -13,9 +13,8 @@ interface Course {
   };
 }
 
-const TRACK_NAMES = ['Other', 'Developer', 'Community', 'Creative'];
-const TRACK_COLORS = ['gray', 'emerald', 'blue', 'purple'];
-const DIFFICULTY_NAMES = ['Beginner', 'Intermediate', 'Advanced'];
+const TRACK_NAMES = ['OTHER', 'DEV', 'COMMUNITY', 'CREATIVE'];
+const DIFFICULTY_NAMES = ['BEG', 'INT', 'ADV'];
 
 interface CourseCardProps {
   course: Course;
@@ -24,76 +23,51 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course, isEnrolled, progress = 0 }: CourseCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
+  const trackName = TRACK_NAMES[course.account.track] || 'OTHER';
+  const difficultyName = DIFFICULTY_NAMES[course.account.difficulty] || 'BEG';
 
-  const trackName = TRACK_NAMES[course.account.track] || 'Other';
-  const difficultyName = DIFFICULTY_NAMES[course.account.difficulty] || 'Beginner';
-  const trackColor = TRACK_COLORS[course.account.track] || 'gray';
-
-  const getTrackBorder = () => {
-    switch (trackColor) {
-      case 'emerald': return 'border-emerald-500/30 hover:border-emerald-500/50';
-      case 'blue': return 'border-blue-500/30 hover:border-blue-500/50';
-      case 'purple': return 'border-purple-500/30 hover:border-purple-500/50';
-      default: return 'border-white/10 hover:border-white/20';
-    }
-  };
-
-  const getTrackBg = () => {
-    switch (trackColor) {
-      case 'emerald': return 'bg-emerald-500/10 text-emerald-400';
-      case 'blue': return 'bg-blue-500/10 text-blue-400';
-      case 'purple': return 'bg-purple-500/10 text-purple-400';
-      default: return 'bg-white/5 text-white/60';
-    }
-  };
-
-  const getDifficultyColor = () => {
+  const getDifficultyBorder = () => {
     switch (difficultyName) {
-      case 'Beginner': return 'text-emerald-400';
-      case 'Intermediate': return 'text-amber-400';
-      case 'Advanced': return 'text-rose-400';
-      default: return 'text-white/40';
+      case 'BEG': return 'border-emerald-500/40 hover:border-emerald-500';
+      case 'INT': return 'border-amber-500/40 hover:border-amber-500';
+      case 'ADV': return 'border-rose-500/40 hover:border-rose-500';
+      default: return 'border-white/20 hover:border-white/40';
     }
   };
 
   return (
-    <div 
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`group relative bg-[#0d1321] border ${getTrackBorder()} transition-all duration-200 cursor-pointer`}
-    >
-      {/* Content */}
-      <div className="p-6">
-        {/* Track & Difficulty */}
-        <div className="flex items-center justify-between mb-4">
-          <div className={`px-2.5 py-1 text-xs font-medium ${getTrackBg()}`}>
-            {trackName}
-          </div>
-          <span className={`text-xs font-medium ${getDifficultyColor()}`}>
-            {difficultyName}
-          </span>
-        </div>
+    <div className={`group relative bg-black border ${getDifficultyBorder()} transition-all duration-200 cursor-pointer hover:-translate-y-0.5`}>
+      {/* Header strip */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-white/10 bg-white/[0.02]">
+        <span className="text-[10px] font-bold tracking-widest text-[#14F195]">
+          {trackName}
+        </span>
+        <span className={`text-[10px] font-bold tracking-widest ${
+          difficultyName === 'BEG' ? 'text-emerald-400' :
+          difficultyName === 'INT' ? 'text-amber-400' : 'text-rose-400'
+        }`}>
+          {difficultyName}
+        </span>
+      </div>
 
+      {/* Content */}
+      <div className="p-5">
         {/* Title */}
-        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#14F195] transition-colors">
-          {course.account.title}
+        <h3 className="text-lg font-black text-white mb-3 group-hover:text-[#14F195] transition-colors leading-tight">
+          {course.account.title.toUpperCase()}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-white/50 mb-4 line-clamp-2">
+        <p className="text-xs text-white/40 mb-5 line-clamp-2 leading-relaxed">
           {course.account.description}
         </p>
 
-        {/* Stats */}
-        <div className="flex items-center gap-4 text-xs text-white/40 mb-4">
-          <span className="flex items-center gap-1.5">
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-            {course.account.lessonCount} lessons
+        {/* Stats row */}
+        <div className="flex items-center justify-between text-xs mb-4">
+          <span className="text-white/30 font-mono">
+            {course.account.lessonCount} LESSONS
           </span>
-          <span className="text-[#14F195] font-medium">
+          <span className="text-[#14F195] font-bold">
             +{course.account.xpReward} XP
           </span>
         </div>
@@ -101,11 +75,11 @@ export default function CourseCard({ course, isEnrolled, progress = 0 }: CourseC
         {/* Progress or CTA */}
         {isEnrolled ? (
           <div>
-            <div className="flex justify-between text-xs text-white/40 mb-1.5">
+            <div className="flex justify-between text-[10px] text-white/40 mb-2 font-mono uppercase">
               <span>Progress</span>
-              <span className="text-white">{progress}%</span>
+              <span>{progress}%</span>
             </div>
-            <div className="h-1.5 bg-white/5 overflow-hidden">
+            <div className="h-1 bg-white/10 overflow-hidden">
               <div 
                 className="h-full bg-[#14F195] transition-all duration-500"
                 style={{ width: `${progress}%` }}
@@ -113,11 +87,11 @@ export default function CourseCard({ course, isEnrolled, progress = 0 }: CourseC
             </div>
           </div>
         ) : (
-          <div className="flex items-center text-sm text-white/60 group-hover:text-[#14F195] transition-colors">
-            <span>View Course</span>
-            <svg className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+          <div className="flex items-center justify-between border-t border-white/10 pt-3">
+            <span className="text-[10px] font-bold tracking-widest text-white/30 group-hover:text-white/60 transition-colors">
+              VIEW_COURSE
+            </span>
+            <span className="text-[#14F195] group-hover:translate-x-1 transition-transform">→</span>
           </div>
         )}
       </div>
