@@ -13,8 +13,8 @@ interface Course {
   };
 }
 
-const TRACK_NAMES = ['OTHER', 'DEV', 'COMMUNITY', 'CREATIVE'];
-const DIFFICULTY_NAMES = ['BEG', 'INT', 'ADV'];
+const TRACK_NAMES = ['General', 'Developer', 'Community', 'Creative'];
+const DIFFICULTY_NAMES = ['Beginner', 'Intermediate', 'Advanced'];
 
 interface CourseCardProps {
   course: Course;
@@ -23,51 +23,60 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course, isEnrolled, progress = 0 }: CourseCardProps) {
-  const trackName = TRACK_NAMES[course.account.track] || 'OTHER';
-  const difficultyName = DIFFICULTY_NAMES[course.account.difficulty] || 'BEG';
+  const trackName = TRACK_NAMES[course.account.track] || 'General';
+  const difficultyName = DIFFICULTY_NAMES[course.account.difficulty] || 'Beginner';
 
-  const getDifficultyBorder = () => {
+  const getDifficultyColor = () => {
     switch (difficultyName) {
-      case 'BEG': return 'border-emerald-500/40 hover:border-emerald-500';
-      case 'INT': return 'border-amber-500/40 hover:border-amber-500';
-      case 'ADV': return 'border-rose-500/40 hover:border-rose-500';
-      default: return 'border-white/20 hover:border-white/40';
+      case 'Beginner': return 'text-emerald-400';
+      case 'Intermediate': return 'text-amber-400';
+      case 'Advanced': return 'text-rose-400';
+      default: return 'text-slate-400';
+    }
+  };
+
+  const getTrackColor = () => {
+    switch (trackName) {
+      case 'Developer': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      case 'Community': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+      case 'Creative': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+      default: return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
     }
   };
 
   return (
-    <div className={`group relative bg-black border ${getDifficultyBorder()} transition-all duration-200 cursor-pointer hover:-translate-y-0.5`}>
-      {/* Header strip */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-white/10 bg-white/[0.02]">
-        <span className="text-[10px] font-bold tracking-widest text-[#14F195]">
-          {trackName}
-        </span>
-        <span className={`text-[10px] font-bold tracking-widest ${
-          difficultyName === 'BEG' ? 'text-emerald-400' :
-          difficultyName === 'INT' ? 'text-amber-400' : 'text-rose-400'
-        }`}>
-          {difficultyName}
-        </span>
-      </div>
-
+    <div className="group bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 transition-all duration-200 cursor-pointer overflow-hidden">
       {/* Content */}
-      <div className="p-5">
+      <div className="p-6">
+        {/* Track & Difficulty */}
+        <div className="flex items-center justify-between mb-4">
+          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getTrackColor()}`}>
+            {trackName}
+          </span>
+          <span className={`text-xs font-medium ${getDifficultyColor()}`}>
+            {difficultyName}
+          </span>
+        </div>
+
         {/* Title */}
-        <h3 className="text-lg font-black text-white mb-3 group-hover:text-[#14F195] transition-colors leading-tight">
-          {course.account.title.toUpperCase()}
+        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors">
+          {course.account.title}
         </h3>
 
         {/* Description */}
-        <p className="text-xs text-white/40 mb-5 line-clamp-2 leading-relaxed">
+        <p className="text-sm text-slate-400 mb-4 line-clamp-2">
           {course.account.description}
         </p>
 
-        {/* Stats row */}
-        <div className="flex items-center justify-between text-xs mb-4">
-          <span className="text-white/30 font-mono">
-            {course.account.lessonCount} LESSONS
+        {/* Stats */}
+        <div className="flex items-center gap-4 text-xs text-slate-500 mb-4">
+          <span className="flex items-center gap-1.5">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            {course.account.lessonCount} lessons
           </span>
-          <span className="text-[#14F195] font-bold">
+          <span className="text-emerald-400 font-medium">
             +{course.account.xpReward} XP
           </span>
         </div>
@@ -75,23 +84,23 @@ export default function CourseCard({ course, isEnrolled, progress = 0 }: CourseC
         {/* Progress or CTA */}
         {isEnrolled ? (
           <div>
-            <div className="flex justify-between text-[10px] text-white/40 mb-2 font-mono uppercase">
+            <div className="flex justify-between text-xs text-slate-400 mb-1.5">
               <span>Progress</span>
-              <span>{progress}%</span>
+              <span className="text-white">{progress}%</span>
             </div>
-            <div className="h-1 bg-white/10 overflow-hidden">
+            <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-[#14F195] transition-all duration-500"
+                className="h-full bg-emerald-400 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-between border-t border-white/10 pt-3">
-            <span className="text-[10px] font-bold tracking-widest text-white/30 group-hover:text-white/60 transition-colors">
-              VIEW_COURSE
-            </span>
-            <span className="text-[#14F195] group-hover:translate-x-1 transition-transform">→</span>
+          <div className="flex items-center text-sm text-slate-400 group-hover:text-emerald-400 transition-colors">
+            <span>View Course</span>
+            <svg className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </div>
         )}
       </div>

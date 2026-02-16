@@ -80,31 +80,30 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>SUPERTEAM ACADEMY</title>
+        <title>Superteam Academy</title>
         <meta name="description" content="Learn to build on Solana. Earn XP and collect verifiable on-chain credentials." />
       </Head>
 
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-slate-950">
         <Hero />
 
         {/* Courses Section */}
-        <section id="courses" className="px-6 py-24 border-t border-white/20 bg-black">
+        <section id="courses" className="px-6 py-20 border-t border-slate-800">
           <div className="max-w-6xl mx-auto">
-            {/* Section Header - brutalist */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
               <div>
-                <p className="text-[10px] font-bold tracking-[0.3em] text-[#14F195] mb-2">// CURRICULUM</p>
-                <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight">ALL_COURSES</h2>
+                <h2 className="text-3xl font-bold text-white mb-2">All Courses</h2>
+                <p className="text-slate-400">Choose your learning path</p>
               </div>
 
-              <div className="flex items-center gap-0 border border-white/20">
-                {['ALL', 'DEV', 'COMM'].map((filter, i) => (
+              <div className="flex items-center gap-2">
+                {['All', 'Developer', 'Community'].map((filter, i) => (
                   <button 
                     key={filter}
-                    className={`px-5 py-3 text-[10px] font-bold tracking-widest transition-colors border-l border-white/20 first:border-l-0 ${
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       i === 0 
-                        ? 'bg-white text-black' 
-                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                        ? 'bg-slate-800 text-white' 
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
                     }`}
                   >
                     {filter}
@@ -114,7 +113,7 @@ export default function Home() {
             </div>
 
             {/* Course Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (
                 <CourseCard 
                   key={course.publicKey}
@@ -127,37 +126,39 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="px-6 py-24 border-t border-white/20 bg-black">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-[10px] font-bold tracking-[0.3em] text-[#14F195] mb-4">// GET_STARTED</p>
-            <h2 className="text-4xl sm:text-5xl font-black text-white mb-6 tracking-tight">
-              READY_TO_BUILD?
+        {/* CTA */}
+        <section className="px-6 py-20 border-t border-slate-800">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Ready to start learning?
             </h2>
-            <p className="text-white/40 mb-10 max-w-md mx-auto text-sm">
+            <p className="text-slate-400 mb-8 max-w-md mx-auto">
               Connect your Solana wallet to track progress and earn on-chain credentials.
             </p>
             <a 
               href="#courses"
-              className="inline-flex items-center gap-3 px-10 py-4 bg-[#14F195] text-black font-black text-sm tracking-widest hover:bg-white transition-colors border border-[#14F195] hover:border-white"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-400 text-slate-950 rounded-lg font-semibold hover:bg-emerald-300 transition-colors"
             >
-              ENROLL_NOW →
+              Get Started
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </a>
           </div>
         </section>
 
-        {/* Footer - brutalist */}
-        <footer className="px-6 py-8 border-t border-white/20 bg-black">
+        {/* Footer */}
+        <footer className="px-6 py-10 border-t border-slate-800">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 border border-[#14F195] flex items-center justify-center">
-                <svg className="w-4 h-4 text-[#14F195]" viewBox="0 0 24 24" fill="currentColor">
+              <div className="w-9 h-9 bg-emerald-400 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               </div>
-              <span className="font-black text-white tracking-tight">SUPERTEAM</span>
+              <span className="font-bold text-white">Superteam Academy</span>
             </div>
-            <p className="text-[10px] font-bold tracking-widest text-white/30">BUILT FOR SOLANA</p>
+            <p className="text-sm text-slate-500">Built for the Solana ecosystem</p>
           </div>
         </footer>
       </div>
