@@ -54,36 +54,46 @@ const COURSES: Record<string, any> = {
   },
 };
 
+// DEMO MODE: No wallet required!
+const DEMO_MODE = true;
+
 export default function CourseDetail() {
   const router = useRouter();
   const { courseId } = router.query;
   const { connected } = useWallet();
-  const [isEnrolled, setIsEnrolled] = useState(courseId === '1' || courseId === '2');
+  const [isEnrolled, setIsEnrolled] = useState(courseId === '1' || courseId === '2' || DEMO_MODE);
   const [showQuiz, setShowQuiz] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState('');
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as const });
+  const [completedLessonIds, setCompletedLessonIds] = useState<number[]>([1, 2]); // Demo: first 2 lessons completed
 
   const course = COURSES[courseId as string] || COURSES['1'];
-  const completedLessons = course.lessons.filter((l: any) => l.completed).length;
+  const completedLessons = completedLessonIds.length;
   const progress = Math.round((completedLessons / course.lessons.length) * 100);
 
   const handleEnroll = () => {
-    if (!connected) return;
     setIsEnrolled(true);
-    showToast('Successfully enrolled!', 'success');
+    showToast('Successfully enrolled! (Demo Mode)', 'success');
   };
 
-  const startQuiz = (lessonTitle: string) => {
+  const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
+
+  const startQuiz = (lessonTitle: string, lessonId: number) => {
     setSelectedLesson(lessonTitle);
+    setActiveLessonId(lessonId);
     setShowQuiz(true);
   };
 
-  const completeQuiz = (score: number) => {
+  const completeQuiz = (score: number, lessonId: number) => {
     setShowQuiz(false);
     if (score >= 70) {
-      showToast(`Quiz completed! ${score}% score - +50 XP earned!`, 'success');
+      // Mark lesson as completed in demo mode
+      if (!completedLessonIds.includes(lessonId)) {
+        setCompletedLessonIds([...completedLessonIds, lessonId]);
+      }
+      showToast(`🎉 Quiz completed! ${score}% score - +50 XP earned!`, 'success');
     } else {
-      showToast(`Quiz completed. ${score}% score. Try again!`, 'info');
+      showToast(`Quiz completed: ${score}%. Need 70%+ to pass. Try again!`, 'info');
     }
   };
 
@@ -107,6 +117,15 @@ export default function CourseDetail() {
       </Head>
 
       <div className="min-h-screen bg-slate-950">
+        {/* Demo Banner */}
+        <div className="bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 border-b border-violet-500/30 px-6 py-2">
+          <div className="max-w-6xl mx-auto text-center">
+            <p className="text-sm text-violet-300">
+              🔓 <span className="font-semibold">Demo Mode</span> — No wallet required. Try the quiz to test your knowledge!
+            </p>
+          </div>
+        </div>
+
         {/* Header */}
         <header className="px-6 border-b border-slate-800">
           <div className="max-w-6xl mx-auto h-16 flex items-center justify-between">
@@ -194,18 +213,15 @@ export default function CourseDetail() {
                   <>
                     <h3 className="text-xl font-semibold text-white mb-2">Start Learning</h3>
                     <p className="text-sm text-slate-400 mb-6">Get full access to all lessons and earn {course.xpReward} XP.</p>
-                    {!connected ? (
-                      <WalletMultiButton className="!w-full !bg-emerald-400 !text-slate-950 !rounded-lg !py-3 !font-semibold hover:!bg-emerald-300" />
-                    ) : (
-                      <motion.button 
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleEnroll}
-                        className="w-full py-3 bg-emerald-400 text-slate-950 font-semibold rounded-lg hover:bg-emerald-300 transition-colors"
-                      >
-                        Enroll Now (Free)
-                      </motion.button>
-                    )}
+                    <motion.button 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleEnroll}
+                    className="w-full py-3 bg-emerald-400 text-slate-950 font-semibold rounded-lg hover:bg-emerald-300 transition-colors"
+                  >
+                    Enroll Now (Demo)
+                  </motion.button>
+                  <p className="text-xs text-violet-400 text-center mt-2">🔓 Demo Mode: No wallet required</p>
                   </>
                 )}
               </motion.div>
@@ -218,56 +234,68 @@ export default function CourseDetail() {
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Course Content</h2>
             <div className="space-y-3">
-              {course.lessons.map((lesson: any, index: number) => (
-                <motion.div
-                  key={lesson.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`p-4 rounded-xl border transition-all ${
-                    lesson.completed 
-                      ? 'bg-emerald-500/5 border-emerald-500/20' 
-                      : isEnrolled 
-                        ? 'bg-slate-900 border-slate-800 hover:border-slate-700'
-                        : 'bg-slate-900/50 border-slate-800/50 opacity-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium ${
-                        lesson.completed 
-                          ? 'bg-emerald-400 text-slate-950' 
-                          : 'bg-slate-800 text-slate-400'
-                      }`}>
-                        {lesson.completed ? (
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        ) : (
-                          index + 1
-                        )}
+              {course.lessons.map((lesson: any, index: number) => {
+                const isCompleted = completedLessonIds.includes(lesson.id);
+                return (
+                  <motion.div
+                    key={lesson.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`p-4 rounded-xl border transition-all ${
+                      isCompleted
+                        ? 'bg-emerald-500/5 border-emerald-500/20' 
+                        : isEnrolled 
+                          ? 'bg-slate-900 border-slate-800 hover:border-slate-700'
+                          : 'bg-slate-900/50 border-slate-800/50 opacity-50'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium ${
+                          isCompleted
+                            ? 'bg-emerald-400 text-slate-950' 
+                            : 'bg-slate-800 text-slate-400'
+                        }`}>
+                          {isCompleted ? (
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          ) : (
+                            index + 1
+                          )}
+                        </div>
+                        <div>
+                          <h3 className={`font-medium ${isCompleted ? 'text-white' : 'text-slate-300'}`}>
+                            {lesson.title}
+                          </h3>
+                          <p className="text-xs text-slate-500">{lesson.duration}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className={`font-medium ${lesson.completed ? 'text-white' : 'text-slate-300'}`}>
-                          {lesson.title}
-                        </h3>
-                        <p className="text-xs text-slate-500">{lesson.duration}</p>
-                      </div>
-                    </div>
 
-                    {isEnrolled && !lesson.completed && (
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => startQuiz(lesson.title)}
-                        className="px-4 py-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
-                      >
-                        Take Quiz
-                      </motion.button>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
+                      {isEnrolled && !isCompleted && (
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => startQuiz(lesson.title, lesson.id)}
+                          className="px-4 py-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                        >
+                          Take Quiz
+                        </motion.button>
+                      )}
+
+                      {isCompleted && (
+                        <span className="text-xs text-emerald-400 font-medium flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          Completed
+                        </span>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -277,7 +305,7 @@ export default function CourseDetail() {
       <QuizModal
         isOpen={showQuiz}
         onClose={() => setShowQuiz(false)}
-        onComplete={completeQuiz}
+        onComplete={(score) => completeQuiz(score, activeLessonId || 0)}
         lessonTitle={selectedLesson}
       />
 
