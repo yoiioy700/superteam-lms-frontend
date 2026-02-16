@@ -1,8 +1,9 @@
 @import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Base Styles */
+/* Base */
 * {
   margin: 0;
   padding: 0;
@@ -15,24 +16,23 @@ html {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #0a0a0f;
+  background: #0a0e1a;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0f;
+  background: #0a0e1a;
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -41,11 +41,11 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(20, 241, 149, 0.2);
   color: #ffffff;
 }
 
-/* Line Clamp */
+/* Line clamp utilities */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -60,108 +60,38 @@ body {
   overflow: hidden;
 }
 
-/* Gradient Text */
-.gradient-text {
-  background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glass Effect */
-.glass {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Glow Effects */
-.glow-violet {
-  box-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
-}
-
-.glow-fuchsia {
-  box-shadow: 0 0 40px rgba(217, 70, 239, 0.3);
-}
-
-/* Wallet Adapter Customization */
+/* Wallet button */
 .wallet-adapter-button {
-  background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%) !important;
-  border-radius: 9999px !important;
+  background: #14F195 !important;
+  color: #0a0e1a !important;
+  border-radius: 6px !important;
   font-weight: 500 !important;
-  transition: all 0.3s ease !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
 }
 
 .wallet-adapter-button:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.5) !important;
+  background: #0ed184 !important;
 }
 
 .wallet-adapter-modal-wrapper {
-  background: rgba(10, 10, 15, 0.95) !important;
+  background: rgba(10, 14, 26, 0.95) !important;
   backdrop-filter: blur(20px) !important;
 }
 
-.wallet-adapter-modal-list {
-  background: transparent !important;
-}
-
 .wallet-adapter-modal-list li {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important;
-  margin-bottom: 8px !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 6px !important;
 }
 
 .wallet-adapter-modal-list li:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
-}
-
-/* Focus States */
+/* Focus */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid rgba(139, 92, 246, 0.5);
+  outline: 2px solid rgba(20, 241, 149, 0.5);
   outline-offset: 2px;
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
 }
