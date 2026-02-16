@@ -18,208 +18,99 @@ interface CourseCardProps {
   progress?: number;
 }
 
-const DIFFICULTY_NAMES = ['Beginner', 'Intermediate', 'Advanced'];
+const DIFFICULTY_LABELS = ['Beginner', 'Intermediate', 'Advanced'];
+const DIFFICULTY_COLORS = [
+  'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+  'bg-red-500/10 text-red-400 border-red-500/20',
+];
 
-export default function CourseCard({ course, isEnrolled, progress = 45 }: CourseCardProps) {
+export default function CourseCard({ course, isEnrolled, progress = 0 }: CourseCardProps) {
   const { title, description, difficulty, xpReward, lessonCount, isPublished } = course.account;
-  const [hoverRotation, setHoverRotation] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [animatedProgress, setAnimatedProgress] = useState(0);
-  
+
   if (!isPublished) return null;
 
-  const displayProgress = isEnrolled ? progress : 0;
-
   useEffect(() => {
-    // Animate progress bar on mount
-    const timer = setTimeout(() => {
-      setAnimatedProgress(displayProgress);
-    }, 300);
+    const timer = setTimeout(() => setAnimatedProgress(isEnrolled ? progress : 0), 300);
     return () => clearTimeout(timer);
-  }, [displayProgress]);
-
-  const handleMouseEnter = () => {
-    const randomRotation = (Math.random() - 0.5) * 0.8;
-    setHoverRotation(randomRotation);
-  };
-
-  const handleMouseLeave = () => {
-    setHoverRotation(0);
-  };
+  }, [isEnrolled, progress]);
 
   return (
     <Link href={`/course/${course.publicKey}`}>
       <div 
-        className="relative max-w-[420px] w-full cursor-pointer"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          transform: hoverRotation 
-            ? `translateY(-4px) scale(1.01) rotate(${hoverRotation}deg)` 
-            : 'translateY(0) scale(1) rotate(0deg)',
-          transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
-        }}
+        className="group relative"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Main Card */}
+        {/* Glow Effect */}
         <div 
-          className="relative overflow-hidden rounded-[18px] p-7 transition-all duration-400"
-          style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: hoverRotation 
-              ? '0 12px 48px rgba(20, 241, 149, 0.15), 0 0 80px rgba(153, 69, 255, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.15)'
-              : '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1)'
-          }}
-        >
-          {/* Gradient Border */}
-          <div 
-            className="absolute inset-[-2px] rounded-[18px] p-[2px] transition-all duration-300"
-            style={{
-              background: 'linear-gradient(135deg, #14F195 0%, #9945FF 100%)',
-              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-              WebkitMaskComposite: 'xor',
-              maskComposite: 'exclude',
-              opacity: hoverRotation ? 0.9 : 0.6,
-              filter: hoverRotation ? 'blur(0px)' : 'blur(0.5px)'
-            }}
-          />
+          className={`absolute -inset-0.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500 ${
+            isHovered ? 'opacity-30' : 'opacity-0'
+          }`}
+        />
 
-          {/* Noise Texture Overlay */}
-          <div 
-            className="absolute inset-0 pointer-events-none mix-blend-overlay"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-              opacity: 0.03
-            }}
-          />
+        {/* Card */}
+        <div className="relative bg-white/[0.02] backdrop-blur-xl border border-white/5 rounded-2xl p-6 overflow-hidden transition-all duration-300 hover:border-white/10 hover:bg-white/[0.03]">
+          {/* Top Section */}
+          <div className="flex items-start justify-between gap-4 mb-4">
+            {/* Icon */}
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 flex items-center justify-center flex-shrink-0">
+              <span className="text-xl">
+                {difficulty === 0 ? '🌱' : difficulty === 1 ? '🚀' : '⚡'}
+              </span>
+            </div>
 
-          {/* Floating Decorative Dots */}
-          <span className="absolute w-1 h-1 rounded-full bg-[#14F195]/30 top-5 left-5 animate-float" />
-          <span className="absolute w-1 h-1 rounded-full bg-[#14F195]/30 top-10 right-8 animate-float-slow" />
-          <span className="absolute w-1 h-1 rounded-full bg-[#14F195]/30 bottom-16 left-8 animate-float-medium" />
+            {/* Difficulty Badge */}
+            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${DIFFICULTY_COLORS[difficulty]}`}>
+              {DIFFICULTY_LABELS[difficulty]}
+            </span>
+          </div>
 
-          {/* Icon Container */}
-          <div 
-            className="w-[72px] h-[72px] mx-auto mb-5 relative"
-            style={{ transform: 'rotate(-2deg)' }}
-          >
-            <div 
-              className="absolute inset-0 rounded-2xl border-[1.5px] border-[#14F195]/20"
-              style={{ 
-                background: 'linear-gradient(135deg, rgba(20, 241, 149, 0.1) 0%, rgba(153, 69, 255, 0.1) 100%)',
-                transform: 'rotate(3deg)'
-              }}
-            />
-            <div 
-              className="relative w-full h-full flex items-center justify-center text-3xl"
-              style={{ filter: 'drop-shadow(0 2px 8px rgba(20, 241, 149, 0.3))' }}
-            >
-              {difficulty === 0 ? '🌱' : difficulty === 1 ? '🚀' : '⚡'}
+          {/* Content */}
+          <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-violet-300 transition-colors">
+            {title}
+          </h3>
+          <p className="text-sm text-white/40 mb-6 line-clamp-2 leading-relaxed">
+            {description || 'Learn Solana development with hands-on exercises.'}
+          </p>
+
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between text-xs mb-2">
+              <span className="text-white/30">Progress</span>
+              <span className="text-violet-400 font-medium">{animatedProgress}%</span>
+            </div>
+            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all duration-700"
+                style={{ width: `${animatedProgress}%` }}
+              />
             </div>
           </div>
 
-          {/* Header - Badges */}
-          <div 
-            className="flex justify-between items-start mb-4 gap-3"
-          >
-            {/* Difficulty Badge */}
-            <div 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wide bg-[#14F195]/10 text-[#14F195] border border-[#14F195]/30 shadow-[0_2px_8px_rgba(20,241,149,0.1)]"
-              style={{ transform: 'rotate(-1deg)' }}
-            >
-              <span className="text-[10px] opacity-70">◆</span>
-              {DIFFICULTY_NAMES[difficulty] || 'Beginner'}
+          {/* Footer Stats */}
+          <div className="flex items-center justify-between pt-4 border-t border-white/5">
+            <div className="flex items-center gap-4 text-xs text-white/30">
+              <span className="flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                {lessonCount} lessons
+              </span>
             </div>
 
             {/* XP Badge */}
-            <div 
-              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#9945FF]/15 text-[#c495ff] border border-dashed border-[#9945FF]/40"
-              style={{ transform: 'rotate(1deg)' }}
-            >
-              <span>⚡</span>
-              {xpReward} XP
-            </div>
-          </div>
-
-          {/* Title */}
-          <h3 
-            className="text-2xl font-bold text-white mb-3 tracking-tight leading-tight"
-            style={{ transform: 'rotate(-0.3deg)' }}
-          >
-            {title}
-          </h3>
-
-          {/* Description */}
-          <p className="text-sm text-white/60 mb-6 leading-relaxed line-clamp-2">
-            {description || 'Master blockchain development with hands-on exercises and earn verifiable credentials on-chain.'}
-          </p>
-
-          {/* Stats Row */}
-          <div className="flex gap-4 mb-6 pt-4 border-t border-dashed border-white/[0.08]">
-            <div className="flex-1 text-center">
-              <div className="text-xl font-bold text-[#14F195] mb-0.5">{lessonCount}</div>
-              <div className="text-[10px] text-white/40 uppercase tracking-wide">Lessons</div>
-            </div>
-            <div className="flex-1 text-center">
-              <div className="text-xl font-bold text-[#14F195] mb-0.5">~{lessonCount * 20}m</div>
-              <div className="text-[10px] text-white/40 uppercase tracking-wide">Duration</div>
-            </div>
-            <div className="flex-1 text-center">
-              <div className="text-xl font-bold text-[#14F195] mb-0.5">2.3k</div>
-              <div className="text-[10px] text-white/40 uppercase tracking-wide">Students</div>
-            </div>
-          </div>
-
-          {/* Progress Section */}
-          <div className="mb-5">
-            <div className="flex justify-between mb-2 text-xs uppercase tracking-wide">
-              <span className="text-white/50 font-medium">Progress</span>
-              <span className="text-[#14F195] font-bold">{displayProgress}%</span>
-            </div>
-            <div className="h-2 bg-white/5 rounded-xl overflow-hidden relative border border-white/[0.08]">
-              <div 
-                className="h-full rounded-xl relative transition-all duration-600"
-                style={{ 
-                  width: `${animatedProgress}%`,
-                  background: 'linear-gradient(90deg, #14F195 0%, #9945FF 100%)',
-                  boxShadow: '0 0 12px rgba(20, 241, 149, 0.4)',
-                  transition: 'width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)'
-                }}
-              >
-                {/* Shimmer Effect */}
-                <div 
-                  className="absolute top-0 right-0 w-8 h-full animate-shimmer"
-                  style={{
-                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3))'
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Button */}
-          <button 
-            className="group/btn w-full py-4 rounded-xl font-bold text-sm uppercase tracking-widest relative overflow-hidden transition-all duration-300 hover:translate-y-[-2px] hover:scale-[1.02] hover:rotate-0 active:translate-y-0 active:scale-[0.98]"
-            style={{ 
-              background: 'linear-gradient(135deg, #14F195 0%, #12d682 100%)',
-              color: '#0a0e1a',
-              boxShadow: '0 4px 20px rgba(20, 241, 149, 0.3)',
-              transform: 'rotate(-0.5deg)'
-            }}
-          >
-            {/* Button hover glow */}
-            <div 
-              className="absolute top-1/2 left-1/2 w-0 h-0 rounded-full bg-white/30 transition-all duration-600 group-hover/btn:w-[300px] group-hover/btn:h-[300px]"
-              style={{ transform: 'translate(-50%, -50%)' }}
-            />
-            
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              {isEnrolled ? 'Continue Learning' : 'Start Learning'}
-              <span className="transition-transform duration-300 group-hover/btn:translate-x-1">→</span>
+            <span className="flex items-center gap-1 text-xs font-medium text-fuchsia-400">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              +{xpReward} XP
             </span>
-          </button>
+          </div>
         </div>
       </div>
-
     </Link>
   );
 }
