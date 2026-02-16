@@ -3,8 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useState } from 'react';
-import { FloatingShapes, QuizModal, Toast } from '../../components';
+import { useState, useEffect } from 'react';
+import { FloatingShapes, QuizModal, Toast, CertificateModal } from '../../components';
 import { motion } from 'framer-motion';
 
 const COURSES: Record<string, any> = {
@@ -65,7 +65,22 @@ export default function CourseDetail() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState('');
   const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as const });
-  const [completedLessonIds, setCompletedLessonIds] = useState<number[]>([1, 2]); // Demo: first 2 lessons completed
+  
+  // Load completed lessons from localStorage
+  const [completedLessonIds, setCompletedLessonIds] = useState<number[]>(() => {
+    if (typeof window !== 'undefined' && courseId) {
+      const saved = localStorage.getItem(`course-${courseId}-completed`);
+      return saved ? JSON.parse(saved) : [1, 2]; // Default: first 2 lessons
+    }
+    return [1, 2];
+  });
+
+  // Save to localStorage when completed lessons change
+  useEffect(() => {
+    if (courseId) {
+      localStorage.setItem(`course-${courseId}-completed`, JSON.stringify(completedLessonIds));
+    }
+  }, [completedLessonIds, courseId]);
 
   const course = COURSES[courseId as string] || COURSES['1'];
   const completedLessons = completedLessonIds.length;
@@ -76,7 +91,15 @@ export default function CourseDetail() {
     showToast('Successfully enrolled! (Demo Mode)', 'success');
   };
 
+  const [showCertificate, setShowCertificate] = useState(false);
   const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
+
+  // Check if all lessons completed
+  useEffect(() => {
+    if (completedLessons === course.lessons.length && completedLessons > 0) {
+      setShowCertificate(true);
+    }
+  }, [completedLessons, course.lessons.length]);
 
   const startQuiz = (lessonTitle: string, lessonId: number) => {
     setSelectedLesson(lessonTitle);
@@ -330,6 +353,14 @@ export default function CourseDetail() {
         onClose={() => setShowQuiz(false)}
         onComplete={(score) => completeQuiz(score, activeLessonId || 0)}
         lessonTitle={selectedLesson}
+      />
+
+      {/* Certificate Modal */}
+      <CertificateModal
+        isOpen={showCertificate}
+        onClose={() => setShowCertificate(false)}
+        courseTitle={course.title}
+        xpEarned={course.xpReward}
       />
 
       {/* Toast */}

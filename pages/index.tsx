@@ -1,7 +1,17 @@
 import Head from 'next/head';
-import { Hero, CourseCard } from '../components';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Hero, CourseCard, SkeletonCard } from '../components';
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    // Simulate loading for demo effect
+    const timer = setTimeout(() => setLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const courses = [
     {
       publicKey: '1',
@@ -102,11 +112,34 @@ export default function Home() {
 
             {/* Course Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <CourseCard 
-                  key={course.publicKey}
-                  course={course}
-                  isEnrolled={course.publicKey === '2'}
+              {loading ? (
+                // Loading skeletons
+                <>
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </>
+              ) : (
+                // Actual courses with animation
+                courses.map((course, index) => (
+                  <motion.div
+                    key={course.publicKey}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <CourseCard 
+                      course={course}
+                      isEnrolled={course.publicKey === '1' || course.publicKey === '2'}
+                      progress={course.publicKey === '2' ? 35 : 0}
+                    />
+                  </motion.div>
+                ))
+              )}
+            </div>
                   progress={course.publicKey === '2' ? 35 : 0}
                 />
               ))}
