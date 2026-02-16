@@ -84,32 +84,20 @@ export default function Home() {
         <meta name="description" content="Learn to build on Solana. Earn XP and collect verifiable on-chain credentials." />
       </Head>
 
-      <div className="min-h-screen bg-slate-950">
+      <div className="min-h-screen bg-[#0a0a0f]">
         <Hero />
 
         {/* Courses Section */}
-        <section id="courses" className="px-6 py-20 border-t border-slate-800">
+        <section id="courses" className="px-6 py-24">
           <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
-              <div>
-                <h2 className="text-3xl font-bold text-white mb-2">All Courses</h2>
-                <p className="text-slate-400">Choose your learning path</p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {['All', 'Developer', 'Community'].map((filter, i) => (
-                  <button 
-                    key={filter}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      i === 0 
-                        ? 'bg-slate-800 text-white' 
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                    }`}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
+            <div className="text-center mb-16">
+              <p className="text-sm tracking-[0.2em] text-violet-400/80 mb-4">CURRICULUM</p>
+              <h2 className="text-4xl sm:text-5xl font-light text-white mb-4">
+                Explore <span className="font-medium">Courses</span>
+              </h2>
+              <p className="text-white/40 max-w-md mx-auto">
+                Master Solana development with our comprehensive learning paths
+              </p>
             </div>
 
             {/* Course Grid */}
@@ -127,17 +115,17 @@ export default function Home() {
         </section>
 
         {/* CTA */}
-        <section className="px-6 py-20 border-t border-slate-800">
+        <section className="px-6 py-24 border-t border-white/[0.06]">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to start learning?
+            <h2 className="text-4xl sm:text-5xl font-light text-white mb-4">
+              Ready to <span className="font-medium">start?</span>
             </h2>
-            <p className="text-slate-400 mb-8 max-w-md mx-auto">
+            <p className="text-white/40 mb-10 max-w-md mx-auto">
               Connect your Solana wallet to track progress and earn on-chain credentials.
             </p>
             <a 
               href="#courses"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-400 text-slate-950 rounded-lg font-semibold hover:bg-emerald-300 transition-colors"
+              className="inline-flex items-center gap-3 px-10 py-4 bg-white text-[#0a0a0f] font-medium rounded-full hover:scale-105 transition-transform"
             >
               Get Started
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -148,17 +136,17 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="px-6 py-10 border-t border-slate-800">
+        <footer className="px-6 py-12 border-t border-white/[0.06]">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-emerald-400 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="currentColor">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               </div>
-              <span className="font-bold text-white">Superteam Academy</span>
+              <span className="text-white font-medium">Superteam Academy</span>
             </div>
-            <p className="text-sm text-slate-500">Built for the Solana ecosystem</p>
+            <p className="text-sm text-white/20">Built for the Solana ecosystem</p>
           </div>
         </footer>
       </div>

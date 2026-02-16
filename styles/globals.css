@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base - professional */
+/* Base - elegant dark */
 * {
   margin: 0;
   padding: 0;
@@ -14,19 +14,20 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: #020617;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a0f;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar - clean */
+/* Scrollbar - elegant */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: #0a0a0f;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -40,7 +41,7 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(52, 211, 153, 0.3);
+  background: rgba(139, 92, 246, 0.3);
   color: #ffffff;
 }
 
@@ -52,40 +53,43 @@ body {
   overflow: hidden;
 }
 
-/* Wallet button - clean */
+/* Wallet button - elegant */
 .wallet-adapter-button {
-  background: #34d399 !important;
-  color: #020617 !important;
-  border-radius: 8px !important;
-  font-weight: 600 !important;
+  background: #ffffff !important;
+  color: #0a0a0f !important;
+  border-radius: 9999px !important;
+  font-weight: 500 !important;
   font-size: 14px !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.3s ease !important;
   font-family: inherit !important;
 }
 
 .wallet-adapter-button:hover {
-  background: #6ee7b7 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: scale(1.02);
 }
 
 .wallet-adapter-modal-wrapper {
-  background: #0f172a !important;
+  background: #0a0a0f !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important;
+  border-radius: 16px !important;
 }
 
 .wallet-adapter-modal-list li {
   background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
 }
 
 .wallet-adapter-modal-list li:hover {
   background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-/* Focus - clean */
+/* Focus - elegant */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid #34d399;
+  outline: 2px solid rgba(139, 92, 246, 0.5);
   outline-offset: 2px;
 }
