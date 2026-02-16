@@ -127,7 +127,7 @@ export default function CourseDetail() {
         </div>
 
         {/* Header */}
-        <header className="px-6 py-2 border-b border-slate-800"
+        <header className="px-6 py-2 border-b border-slate-800">
           <div className="max-w-6xl mx-auto h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="w-9 h-9 bg-emerald-400 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
