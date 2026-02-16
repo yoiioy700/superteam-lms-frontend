@@ -1,4 +1,3 @@
-@import 'tailwindcss/base';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,11 +18,12 @@ body {
   background: #0a0e1a;
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar */
+/* Scrollbar - minimal */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -32,11 +32,10 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Selection */
@@ -45,7 +44,7 @@ body {
   color: #ffffff;
 }
 
-/* Line clamp utilities */
+/* Line clamp */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -53,21 +52,14 @@ body {
   overflow: hidden;
 }
 
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Wallet button */
+/* Wallet button - flat style */
 .wallet-adapter-button {
   background: #14F195 !important;
   color: #0a0e1a !important;
-  border-radius: 6px !important;
-  font-weight: 500 !important;
+  border-radius: 0 !important;
+  font-weight: 600 !important;
   font-size: 14px !important;
-  transition: all 0.2s ease !important;
+  transition: background-color 0.2s ease !important;
 }
 
 .wallet-adapter-button:hover {
@@ -75,23 +67,23 @@ body {
 }
 
 .wallet-adapter-modal-wrapper {
-  background: rgba(10, 14, 26, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
+  background: #0a0e1a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .wallet-adapter-modal-list li {
   background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0 !important;
 }
 
 .wallet-adapter-modal-list li:hover {
   background: rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Focus */
+/* Focus - minimal */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid rgba(20, 241, 149, 0.5);
+  outline: 2px solid #14F195;
   outline-offset: 2px;
 }
