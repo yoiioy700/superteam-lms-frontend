@@ -4,9 +4,11 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 export default function Hero() {
   const { connected } = useWallet();
+  const [mounted, setMounted] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    setMounted(true);
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -14,23 +16,44 @@ export default function Hero() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <section className="relative min-h-screen flex items-center px-6 overflow-hidden bg-[#0a0a0f]">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center animate-pulse">
+            <div className="space-y-6">
+              <div className="h-4 w-32 bg-white/10 rounded" />
+              <div className="h-20 w-3/4 bg-white/10 rounded" />
+              <div className="h-4 w-full bg-white/10 rounded" />
+              <div className="h-12 w-40 bg-white/10 rounded-full" />
+            </div>
+            <div className="h-[400px] bg-white/5 rounded" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const offsetX = typeof window !== 'undefined' ? (mousePosition.x - window.innerWidth / 2) * 0.02 : 0;
+  const offsetY = typeof window !== 'undefined' ? (mousePosition.y - window.innerHeight / 2) * 0.02 : 0;
+
   return (
     <section className="relative min-h-screen flex items-center px-6 overflow-hidden bg-[#0a0a0f]">
       {/* Background elements */}
       <div className="absolute inset-0">
-        {/* Gradient orbs */}
         <div 
-          className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full opacity-20 blur-3xl"
+          className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full opacity-20 blur-3xl transition-transform duration-700 ease-out"
           style={{
             background: 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
-            transform: `translate(${(mousePosition.x - window.innerWidth / 2) * 0.02}px, ${(mousePosition.y - window.innerHeight / 2) * 0.02}px)`,
+            transform: `translate(${offsetX}px, ${offsetY}px)`,
           }}
         />
         <div 
-          className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] rounded-full opacity-15 blur-3xl"
+          className="absolute bottom-1/3 right-1/3 w-[400px] h-[400px] rounded-full opacity-15 blur-3xl transition-transform duration-700 ease-out"
           style={{
             background: 'radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%)',
-            transform: `translate(${(mousePosition.x - window.innerWidth / 2) * -0.01}px, ${(mousePosition.y - window.innerHeight / 2) * -0.01}px)`,
+            transform: `translate(${-offsetX}px, ${-offsetY}px)`,
           }}
         />
       </div>
@@ -70,7 +93,7 @@ export default function Hero() {
               )}
             </div>
 
-            {/* Stats - horizontal */}
+            {/* Stats */}
             <div className="flex items-center gap-10 mt-16 pt-8 border-t border-white/10">
               {[
                 { value: '12+', label: 'Courses' },
@@ -88,47 +111,40 @@ export default function Hero() {
           {/* Right: Visual element */}
           <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
             <div className="relative">
-              {/* Abstract 3D cube visualization */}
               <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px]">
                 {/* Main cube */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-48 h-48 sm:w-64 sm:h-64 relative transform rotate-12"
+                  <div 
+                    className="w-48 h-48 sm:w-64 sm:h-64 relative"
                     style={{
                       transform: `rotateX(55deg) rotateZ(-45deg) rotateY(10deg)`,
                       transformStyle: 'preserve-3d',
                     }}
                   >
-                    {/* Front face */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/30 backdrop-blur-sm"
                       style={{ transform: 'translateZ(4rem)' }}
                     />
                     
-                    {/* Back face */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 border border-violet-500/20"
                       style={{ transform: 'translateZ(-4rem) rotateY(180deg)' }}
                     />
                     
-                    {/* Top face */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-400/25 to-fuchsia-400/25 border border-violet-500/30"
                       style={{ transform: 'rotateX(-90deg) translateZ(4rem)' }}
                     />
                     
-                    {/* Bottom face */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-fuchsia-500/5 border border-violet-500/20"
                       style={{ transform: 'rotateX(90deg) translateZ(4rem)' }}
                     />
                     
-                    {/* Right face */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-violet-500/25"
                       style={{ transform: 'rotateY(90deg) translateZ(4rem)' }}
                     />
                     
-                    {/* Left face */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 border border-violet-500/25"
                       style={{ transform: 'rotateY(-90deg) translateZ(4rem)' }}
                     />
 
-                    {/* Inner glow */}
                     <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 blur-xl" />
                   </div>
                 </div>
@@ -140,7 +156,6 @@ export default function Hero() {
                 />
               </div>
 
-              {/* Label */}
               <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-center">
                 <p className="text-xs text-white/30 tracking-wider">ON-CHAIN LEARNING</p>
               </div>
