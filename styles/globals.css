@@ -29,12 +29,39 @@
 
 /* Animation utilities */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0px); opacity: 0.3; }
+  50% { transform: translateY(-10px); opacity: 0.6; }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); opacity: 0.3; }
+  50% { transform: translateY(-10px); opacity: 0.6; }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px); opacity: 0.3; }
+  50% { transform: translateY(-10px); opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 4s ease-in-out infinite 0.5s;
+}
+
+.animate-float-medium {
+  animation: float-medium 3.5s ease-in-out infinite 1s;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
 }
 
 /* Gradient text */
