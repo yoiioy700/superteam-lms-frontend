@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useState } from 'react';
+import { QuizModal, Toast } from '../../components';
+import { motion } from 'framer-motion';
 
 const COURSES: Record<string, any> = {
   '1': {
@@ -57,6 +59,9 @@ export default function CourseDetail() {
   const { courseId } = router.query;
   const { connected } = useWallet();
   const [isEnrolled, setIsEnrolled] = useState(courseId === '1' || courseId === '2');
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState('');
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' as const });
 
   const course = COURSES[courseId as string] || COURSES['1'];
   const completedLessons = course.lessons.filter((l: any) => l.completed).length;
@@ -65,6 +70,25 @@ export default function CourseDetail() {
   const handleEnroll = () => {
     if (!connected) return;
     setIsEnrolled(true);
+    showToast('Successfully enrolled!', 'success');
+  };
+
+  const startQuiz = (lessonTitle: string) => {
+    setSelectedLesson(lessonTitle);
+    setShowQuiz(true);
+  };
+
+  const completeQuiz = (score: number) => {
+    setShowQuiz(false);
+    if (score >= 70) {
+      showToast(`Quiz completed! ${score}% score - +50 XP earned!`, 'success');
+    } else {
+      showToast(`Quiz completed. ${score}% score. Try again!`, 'info');
+    }
+  };
+
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setToast({ isVisible: true, message, type });
   };
 
   const getDifficultyColor = () => {
@@ -133,7 +157,12 @@ export default function CourseDetail() {
               </div>
 
               {/* Enroll Card */}
-              <div className="bg-slate-900 rounded-xl border border-slate-800 p-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-slate-900 rounded-xl border border-slate-800 p-6"
+              >
                 {isEnrolled ? (
                   <>
                     <div className="flex items-center gap-2 text-emerald-400 mb-4">
@@ -149,7 +178,12 @@ export default function CourseDetail() {
                         <span className="text-white">{progress}%</span>
                       </div>
                       <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-400 rounded-full" style={{ width: `${progress}%` }} />
+                        <motion.div 
+                          className="h-full bg-emerald-400 rounded-full"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 1, delay: 0.5 }}
+                        />
                       </div>
                     </div>
                     <button className="w-full mt-6 py-3 bg-emerald-400 text-slate-950 font-semibold rounded-lg hover:bg-emerald-300 transition-colors">
@@ -163,16 +197,18 @@ export default function CourseDetail() {
                     {!connected ? (
                       <WalletMultiButton className="!w-full !bg-emerald-400 !text-slate-950 !rounded-lg !py-3 !font-semibold hover:!bg-emerald-300" />
                     ) : (
-                      <button 
+                      <motion.button 
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={handleEnroll}
                         className="w-full py-3 bg-emerald-400 text-slate-950 font-semibold rounded-lg hover:bg-emerald-300 transition-colors"
                       >
                         Enroll Now (Free)
-                      </button>
+                      </motion.button>
                     )}
                   </>
                 )}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -183,9 +219,12 @@ export default function CourseDetail() {
             <h2 className="text-2xl font-bold text-white mb-6">Course Content</h2>
             <div className="space-y-3">
               {course.lessons.map((lesson: any, index: number) => (
-                <div
+                <motion.div
                   key={lesson.id}
-                  className={`p-4 rounded-lg border transition-all ${
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`p-4 rounded-xl border transition-all ${
                     lesson.completed 
                       ? 'bg-emerald-500/5 border-emerald-500/20' 
                       : isEnrolled 
@@ -193,33 +232,62 @@ export default function CourseDetail() {
                         : 'bg-slate-900/50 border-slate-800/50 opacity-50'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium ${
-                      lesson.completed 
-                        ? 'bg-emerald-400 text-slate-950' 
-                        : 'bg-slate-800 text-slate-400'
-                    }`}>
-                      {lesson.completed ? (
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      ) : (
-                        index + 1
-                      )}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium ${
+                        lesson.completed 
+                          ? 'bg-emerald-400 text-slate-950' 
+                          : 'bg-slate-800 text-slate-400'
+                      }`}>
+                        {lesson.completed ? (
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          index + 1
+                        )}
+                      </div>
+                      <div>
+                        <h3 className={`font-medium ${lesson.completed ? 'text-white' : 'text-slate-300'}`}>
+                          {lesson.title}
+                        </h3>
+                        <p className="text-xs text-slate-500">{lesson.duration}</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className={`font-medium ${lesson.completed ? 'text-white' : 'text-slate-300'}`}>
-                        {lesson.title}
-                      </h3>
-                      <p className="text-xs text-slate-500">{lesson.duration}</p>
-                    </div>
+
+                    {isEnrolled && !lesson.completed && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => startQuiz(lesson.title)}
+                        className="px-4 py-2 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                      >
+                        Take Quiz
+                      </motion.button>
+                    )}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Quiz Modal */}
+      <QuizModal
+        isOpen={showQuiz}
+        onClose={() => setShowQuiz(false)}
+        onComplete={completeQuiz}
+        lessonTitle={selectedLesson}
+      />
+
+      {/* Toast */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast({ ...toast, isVisible: false })}
+      />
     </>
   );
 }
