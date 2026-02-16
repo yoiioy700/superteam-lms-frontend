@@ -150,7 +150,7 @@ export default function CourseDetail() {
               <span className="text-white">{course.title}</span>
             </div>
 
-            <div className="grid lg:grid-cols-[1fr_380px] gap-12">
+            <div className="grid lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-8 xl:gap-12">
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <span className="px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -161,8 +161,8 @@ export default function CourseDetail() {
                   </span>
                 </div>
 
-                <h1 className="text-4xl font-bold text-white mb-4">{course.title}</h1>
-                <p className="text-lg text-slate-400 mb-6">{course.description}</p>
+                <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">{course.title}</h1>
+                <p className="text-base lg:text-lg text-slate-400 mb-6 max-w-2xl">{course.description}</p>
 
                 <div className="flex items-center gap-6 text-sm text-slate-400">
                   <span className="flex items-center gap-2">
@@ -230,8 +230,8 @@ export default function CourseDetail() {
         </div>
 
         {/* Lessons */}
-        <div className="px-6 py-12">
-          <div className="max-w-6xl mx-auto">
+        <div className="px-6 lg:px-12 py-12">
+          <div className="max-w-6xl xl:max-w-7xl mx-auto"
             <h2 className="text-2xl font-bold text-white mb-6">Course Content</h2>
             <div className="space-y-3">
               {course.lessons.map((lesson: any, index: number) => {
