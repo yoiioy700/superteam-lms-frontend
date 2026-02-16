@@ -1,4 +1,5 @@
 export { default as CourseCard } from './CourseCard';
+export { default as FloatingShapes } from './FloatingShapes';
 export { default as Hero } from './Hero';
 export { default as Navbar } from './Navbar';
 export { default as QuizModal } from './QuizModal';
