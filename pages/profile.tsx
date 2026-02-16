@@ -2,28 +2,34 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useLearnerProfile, useXpBalance } from '../hooks/useProgram';
-import { 
-  getLevel, 
-  getLevelName, 
-  getLevelProgress, 
-  getNextLevelXp,
-  formatXp,
-  STREAK_MILESTONES,
-  isStreakMilestone,
-} from '../lib/sdk';
+import { useState } from 'react';
 
-const ACHIEVEMENTS_LIST = [
-  { id: 1, name: 'First Steps', desc: 'Complete your first lesson', icon: '🎯' },
-  { id: 2, name: 'Dedicated Learner', desc: '7 day streak', icon: '🔥' },
-  { id: 3, name: 'Course Graduate', desc: 'Complete your first course', icon: '🎓' },
-  { id: 4, name: 'Solana Builder', desc: 'Complete Developer track', icon: '⚡' },
-];
+// Mock data
+const USER_DATA = {
+  xp: 1250,
+  level: 3,
+  streak: 5,
+  longestStreak: 12,
+  coursesCompleted: 2,
+  lessonsCompleted: 24,
+  joinedAt: '2025-12-15',
+  achievements: [
+    { id: 1, name: 'First Steps', desc: 'Complete your first lesson', icon: '🎯', unlocked: true },
+    { id: 2, name: 'Dedicated Learner', desc: '7 day streak', icon: '🔥', unlocked: true },
+    { id: 3, name: 'Course Graduate', desc: 'Complete your first course', icon: '🎓', unlocked: true },
+    { id: 4, name: 'Solana Builder', desc: 'Complete Developer track', icon: '⚡', unlocked: false },
+    { id: 5, name: 'Chain Crusher', desc: '30 day streak', icon: '⛓️', unlocked: false },
+    { id: 6, name: 'Master Learner', desc: 'Complete 5 courses', icon: '🏆', unlocked: false },
+  ],
+  enrolledCourses: [
+    { id: '1', title: 'Anchor Framework Fundamentals', progress: 35, total: 12, completed: 4, xp: 200 },
+    { id: '2', title: 'Web3 Community Building', progress: 75, total: 8, completed: 6, xp: 300 },
+  ],
+};
 
 export default function Profile() {
   const { connected } = useWallet();
-  const { profile } = useLearnerProfile();
-  const { balance } = useXpBalance();
+  const [activeTab, setActiveTab] = useState('courses');
 
   if (!connected) {
     return (
@@ -31,28 +37,25 @@ export default function Profile() {
         <Head>
           <title>Profile | Superteam Academy</title>
         </Head>
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
+
+        <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center px-6">
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
-              <svg className="w-10 h-10 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#14F195]/10 border border-[#14F195]/20 flex items-center justify-center">
+              <svg className="w-10 h-10 text-[#14F195]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Wallet Not Connected</h1>
-            <p className="text-slate-400 mb-6 max-w-md mx-auto">
-              Connect your Solana wallet to view your profile, track XP, and see your achievements
-            </p>
-            <WalletMultiButton className="!bg-emerald-500 hover:!bg-emerald-400 !rounded-xl" />
+            <h1 className="text-2xl font-bold text-white mb-2">Connect Your Wallet</h1>
+            <p className="text-white/40 mb-6">Connect your Solana wallet to view your profile and track your progress.</p>
+            <WalletMultiButton className="!bg-[#14F195] !text-[#0a0e1a] !rounded-lg !px-6 !py-3" />
           </div>
         </div>
       </>
     );
   }
 
-  const level = getLevel(balance);
-  const levelName = getLevelName(level);
-  const progress = getLevelProgress(balance);
-  const nextLevelXp = getNextLevelXp(level);
+  const xpToNextLevel = USER_DATA.level * 500;
+  const progressPercent = (USER_DATA.xp / xpToNextLevel) * 100;
 
   return (
     <>
@@ -60,139 +63,182 @@ export default function Profile() {
         <title>Profile | Superteam Academy</title>
       </Head>
 
-      <div className="min-h-screen bg-slate-900 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Profile Header Card */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700/50 p-6 sm:p-8 mb-6">
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-purple-500/5" />
-            
-            <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-6">
+      <div className="min-h-screen bg-[#0a0e1a]">
+        {/* Header */}
+        <header className="px-6 border-b border-white/[0.06]">
+          <div className="max-w-6xl mx-auto h-16 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[#14F195] flex items-center justify-center">
+                <svg className="w-5 h-5 text-[#0a0e1a]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+              </div>
+              <span className="font-semibold text-white">Superteam Academy</span>
+            </Link>
+            <WalletMultiButton className="!bg-[#14F195] !text-[#0a0e1a] !rounded-lg !px-4 !py-2 !text-sm !font-medium !border-0" />
+          </div>
+        </header>
+
+        <div className="px-6 py-12">
+          <div className="max-w-6xl mx-auto">
+            {/* Profile Header */}
+            <div className="grid lg:grid-cols-[auto_1fr] gap-8 mb-12">
               {/* Avatar */}
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400 to-purple-500 p-[2px]">
-                  <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center">
-                    <span className="text-4xl">{profile ? '👨‍🎓' : '👤'}</span>
-                  </div>
+              <div className="flex flex-col items-center lg:items-start">
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#14F195] to-[#0ed184] flex items-center justify-center mb-4">
+                  <span className="text-4xl">👨‍🎓</span>
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold text-sm border-2 border-slate-900">
-                  {level}
-                </div>
+                <span className="px-4 py-1.5 rounded-full bg-[#14F195]/10 text-[#14F195] text-sm font-medium border border-[#14F195]/20">
+                  Level {USER_DATA.level}
+                </span>
               </div>
 
-              {/* Info */}
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-2xl font-bold text-white">Learner Profile</h1>
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-medium border border-emerald-500/30">
-                    {levelName}
-                  </span>
+              {/* Stats */}
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-2">Learner Profile</h1>
+                <p className="text-white/40 mb-6">Joined December 2025</p>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4">
+                    <p className="text-2xl font-bold text-[#14F195] mb-1">{USER_DATA.xp.toLocaleString()}</p>
+                    <p className="text-xs text-white/40">Total XP</p>
+                  </div>
+
+                  <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4">
+                    <p className="text-2xl font-bold text-white mb-1">{USER_DATA.streak}</p>
+                    <p className="text-xs text-white/40">Day Streak</p>
+                  </div>
+
+                  <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4">
+                    <p className="text-2xl font-bold text-white mb-1">{USER_DATA.coursesCompleted}</p>
+                    <p className="text-xs text-white/40">Courses Done</p>
+                  </div>
+
+                  <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4">
+                    <p className="text-2xl font-bold text-white mb-1">{USER_DATA.lessonsCompleted}</p>
+                    <p className="text-xs text-white/40">Lessons Done</p>
+                  </div>
                 </div>
-                
-                <p className="text-slate-400">
-                  {profile?.track ? `Track: ${profile.track}` : 'No track selected'}
-                </p>
               </div>
             </div>
 
             {/* XP Progress */}
-            <div className="relative mt-8">
-              <div className="flex justify-between text-sm mb-2">
-                <span className="text-slate-400">Level Progress</span>
-                <span className="text-emerald-400 font-medium">{formatXp(balance)} / {nextLevelXp} XP</span>
-              </div>
-              
-              <div className="h-4 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-                <div 
-                  className="h-full bg-gradient-to-r from-emerald-400 to-emerald-300 rounded-full transition-all duration-500 relative"
-                  style={{ width: `${progress}%` }}
-                >
-                  <div className="absolute inset-0 bg-white/20 animate-pulse" />
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-6 mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-white font-medium">Level {USER_DATA.level} → Level {USER_DATA.level + 1}</p>
+                  <p className="text-sm text-white/40">{xpToNextLevel - USER_DATA.xp} XP to next level</p>
                 </div>
+                <span className="text-2xl font-bold text-[#14F195]">{USER_DATA.level}</span>
               </div>
-              
-              <p className="mt-2 text-xs text-slate-500 text-right">
-                {nextLevelXp - balance} XP to next level
-              </p>
+              <div className="h-2 bg-white/[0.04] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#14F195] rounded-full transition-all duration-500"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-            {[
-              { label: 'Total XP', value: formatXp(balance), color: 'emerald' },
-              { label: 'Current Streak', value: profile?.currentStreak?.toString() || '0', color: 'orange', suffix: ' days' },
-              { label: 'Longest Streak', value: profile?.longestStreak?.toString() || '0', color: 'purple', suffix: ' days' },
-              { label: 'Courses Complete', value: profile?.completedCourses?.length?.toString() || '0', color: 'blue' },
-            ].map((stat, i) => (
-              <div key={i} className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
-                <p className="text-slate-400 text-sm mb-1">{stat.label}</p>
-                <p className={`text-2xl font-bold text-${stat.color}-400`}>
-                  {stat.value}<span className="text-sm font-normal text-slate-500">{stat.suffix || ''}</span>
-                </p>
-              </div>
-            ))}
-          </div>
+            {/* Tabs */}
+            <div className="flex items-center gap-2 mb-6 border-b border-white/[0.06]">
+              {[
+                { id: 'courses', label: 'My Courses' },
+                { id: 'achievements', label: 'Achievements' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === tab.id 
+                      ? 'text-[#14F195] border-[#14F195]' 
+                      : 'text-white/40 border-transparent hover:text-white/60'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
-          {/* Achievements */}
-          <div className="rounded-2xl bg-slate-800/30 border border-slate-700/50 p-6 mb-6">
-            <h2 className="text-lg font-bold text-white mb-4">Achievements</h2>
-            
-            <div className="grid gap-4">
-              {ACHIEVEMENTS_LIST.map((ach, i) => {
-                const unlocked = profile?.achievements?.includes(ach.id);
-                return (
-                  <div 
-                    key={i}
-                    className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${
-                      unlocked 
-                        ? 'bg-slate-800/50 border-emerald-500/30' 
-                        : 'bg-slate-800/20 border-slate-700/30 opacity-50'
-                    }`}
+            {/* Tab Content */}
+            <div className="min-h-[400px]">
+              {activeTab === 'courses' ? (
+                <div className="space-y-4">
+                  {USER_DATA.enrolledCourses.map((course) => (
+                    <div key={course.id} className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-5">
+                      <div className="flex items-start justify-between gap-4 mb-4">
+                        <div>
+                          <Link href={`/course/${course.id}`}>
+                            <h3 className="text-lg font-medium text-white hover:text-[#14F195] transition-colors">
+                              {course.title}
+                            </h3>
+                          </Link>
+                          <p className="text-sm text-white/40 mt-1">{course.completed} of {course.total} lessons completed</p>
+                        </div>
+                        <span className="text-sm text-[#14F195] font-medium">+{course.xp} XP</span>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs text-white/40">
+                          <span>Progress</span>
+                          <span>{course.progress}%</span>
+                        </div>
+                        <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-[#14F195] rounded-full transition-all duration-500"
+                            style={{ width: `${course.progress}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-4 pt-4 border-t border-white/[0.04]">
+                        <Link 
+                          href={`/course/${course.id}`}
+                          className="text-sm text-[#14F195] hover:underline"
+                        >
+                          Continue Learning →
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+
+                  <Link 
+                    href="/"
+                    className="flex items-center justify-center gap-2 py-4 border border-dashed border-white/[0.1] rounded-xl text-white/40 hover:text-white/60 hover:border-white/[0.2] transition-colors"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-slate-700 flex items-center justify-center text-2xl">
-                      {ach.icon}
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Browse More Courses
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {USER_DATA.achievements.map((achievement) => (
+                    <div 
+                      key={achievement.id}
+                      className={`p-5 rounded-xl border transition-all ${
+                        achievement.unlocked 
+                          ? 'bg-white/[0.02] border-white/[0.06]' 
+                          : 'bg-white/[0.01] border-white/[0.04] opacity-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-2xl">{achievement.icon}</span>
+                        <div>
+                          <h4 className={`font-medium ${achievement.unlocked ? 'text-white' : 'text-white/40'}`}>
+                            {achievement.name}
+                          </h4>
+                          <span className="text-xs text-white/30">
+                            {achievement.unlocked ? 'Unlocked' : 'Locked'}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-white/40">{achievement.desc}</p>
                     </div>
-                    <div className="flex-1">
-                      <p className={`font-medium ${unlocked ? 'text-white' : 'text-slate-400'}`}>
-                        {ach.name}
-                      </p>
-                      <p className="text-sm text-slate-500">{ach.desc}</p>
-                    </div>
-                    
-                    <div>
-                      {unlocked ? (
-                        <span className="text-emerald-400">
-                          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                        </span>
-                      ) : (
-                        <span className="text-slate-600">
-                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                          </svg>
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="flex flex-wrap gap-4">
-            <Link 
-              href="/"
-              className="flex-1 min-w-[140px] p-4 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-emerald-500/50 transition-all text-center group"
-            >
-              <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <p className="text-slate-300 font-medium">Browse Courses</p>
-            </Link>
           </div>
         </div>
       </div>
