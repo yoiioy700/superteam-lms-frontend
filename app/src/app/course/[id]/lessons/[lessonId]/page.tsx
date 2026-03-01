@@ -3,7 +3,7 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Play, CheckCircle2, ChevronLeft, TerminalSquare } from "lucide-react";
 import Link from "next/link";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -42,6 +42,10 @@ export default function LessonPage({ params }: { params: { id: string, lessonId:
     const [isCompiling, setIsCompiling] = useState(false);
     const [consoleOutput, setConsoleOutput] = useState<string[]>(["Compiler initialized.", "Ready for input."]);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => { setMounted(true); }, []);
+    if (!mounted) return null;
 
     const handleEditorChange = (value: string | undefined) => {
         if (value) setCode(value);

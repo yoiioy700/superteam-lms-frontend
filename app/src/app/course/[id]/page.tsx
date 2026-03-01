@@ -3,7 +3,7 @@
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { Clock, Users, Star, PlayCircle, CheckCircle2, Circle, ChevronDown, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useAcademyProgram, getEnrollmentPDA } from "@/lib/anchor/setup";
@@ -15,6 +15,10 @@ export default function CourseDetailPage({ params }: { params: { id: string } })
     const [isEnrolling, setIsEnrolling] = useState(false);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [completingLessonStr, setCompletingLessonStr] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => { setMounted(true); }, []);
+    if (!mounted) return null;
 
     // Hardcoded course ID for demo based on URL or static 'rust-for-solana'
     const courseId = params?.id || "rust-for-solana";

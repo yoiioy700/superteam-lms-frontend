@@ -3,6 +3,7 @@
 import { User } from "lucide-react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
+import { useState, useEffect } from "react";
 
 const WalletMultiButton = dynamic(
     async () => (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton,
@@ -14,6 +15,29 @@ interface Breadcrumb {
     href?: string;
 }
 
+// Wrapper that is only rendered client-side to avoid useWallet SSR issues
+function WalletStatus() {
+    const { publicKey } = useWallet();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
+
+    return publicKey ? (
+        <div className="flex items-center gap-3 px-4 py-2 bg-[#1E1E1E] border border-[#1F1F1F] rounded-md">
+            <User className="w-4 h-4 text-primary" />
+            <span className="text-[#FAF8F5] font-manrope font-medium text-[12px]">
+                {publicKey.toBase58().slice(0, 4)}...{publicKey.toBase58().slice(-4)}
+            </span>
+        </div>
+    ) : (
+        <WalletMultiButton style={{ backgroundColor: '#C9A962', color: '#0F0F0F', borderRadius: '6px', fontFamily: 'var(--font-manrope)', fontWeight: 600, fontSize: '14px', height: '40px' }} />
+    );
+}
+
 export function DashboardHeader({
     title,
     subtitle,
@@ -23,8 +47,6 @@ export function DashboardHeader({
     subtitle?: string,
     breadcrumbs?: Breadcrumb[]
 }) {
-    const { publicKey } = useWallet();
-
     return (
         <header className="flex justify-between items-center w-full mb-12">
             <div className="flex flex-col gap-2">
@@ -50,16 +72,7 @@ export function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-4">
-                {publicKey ? (
-                    <div className="flex items-center gap-3 px-4 py-2 bg-[#1E1E1E] border border-[#1F1F1F] rounded-md">
-                        <User className="w-4 h-4 text-primary" />
-                        <span className="text-[#FAF8F5] font-manrope font-medium text-[12px]">
-                            {publicKey.toBase58().slice(0, 4)}...{publicKey.toBase58().slice(-4)}
-                        </span>
-                    </div>
-                ) : (
-                    <WalletMultiButton style={{ backgroundColor: '#C9A962', color: '#0F0F0F', borderRadius: '6px', fontFamily: 'var(--font-manrope)', fontWeight: 600, fontSize: '14px', height: '40px' }} />
-                )}
+                <WalletStatus />
             </div>
         </header>
     );
