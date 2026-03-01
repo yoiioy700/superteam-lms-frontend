@@ -2,11 +2,20 @@
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
-import Editor from "@monaco-editor/react";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Play, CheckCircle2, ChevronLeft, TerminalSquare } from "lucide-react";
 import Link from "next/link";
 import { useWallet } from "@solana/wallet-adapter-react";
+
+const Editor = dynamic(() => import("@monaco-editor/react"), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full h-full bg-[#1E1E1E] flex items-center justify-center">
+            <span className="text-[#888] font-manrope text-sm">Loading editor...</span>
+        </div>
+    ),
+});
 
 const INITIAL_CODE = `use anchor_lang::prelude::*;
 
